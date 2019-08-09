@@ -13,4 +13,5 @@ public class XxlJobAdminApplication {
         SpringApplication.run(XxlJobAdminApplication.class, args);
 	}
 
+
 }
