@@ -68,10 +68,13 @@ public class JobTriggerPoolHelper {
 
     /**
      * add trigger
+     * 优化选择
+     *      根据超时计数次数，选择最优的任务线程池。
      */
     public void addTrigger(final int jobId, final TriggerTypeEnum triggerType, final int failRetryCount, final String executorShardingParam, final String executorParam) {
 
         // choose thread pool
+        //当在一分钟内超时十次以上选择慢线程池
         ThreadPoolExecutor triggerPool_ = fastTriggerPool;
         AtomicInteger jobTimeoutCount = jobTimeoutCountMap.get(jobId);
         if (jobTimeoutCount!=null && jobTimeoutCount.get() > 10) {      // job-timeout 10 times in 1 min
@@ -93,6 +96,8 @@ public class JobTriggerPoolHelper {
                 } finally {
 
                     // check timeout-count-map
+                    //如果时间不在同一分钟内，超时次数清除
+                    //不是每隔一分钟清除一次，两次任务触发时间是否在同一分钟内，否则清除超时计数
                     long minTim_now = System.currentTimeMillis()/60000;
                     if (minTim != minTim_now) {
                         minTim = minTim_now;
@@ -100,6 +105,7 @@ public class JobTriggerPoolHelper {
                     }
 
                     // incr timeout-count-map
+                    //大于半秒时记录一次超时
                     long cost = System.currentTimeMillis()-start;
                     if (cost > 500) {       // ob-timeout threshold 500ms
                         AtomicInteger timeoutCount = jobTimeoutCountMap.putIfAbsent(jobId, new AtomicInteger(1));

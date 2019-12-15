@@ -35,6 +35,7 @@ public class XxlJobScheduler  {
         JobFailMonitorHelper.getInstance().start();
 
         // admin trigger pool start
+        //初始化线程池
         JobTriggerPoolHelper.toStart();
 
         // admin log report start
@@ -56,6 +57,7 @@ public class XxlJobScheduler  {
         JobLogReportHelper.getInstance().toStop();
 
         // admin trigger pool stop
+        //关闭线程池
         JobTriggerPoolHelper.toStop();
 
         // admin monitor stop

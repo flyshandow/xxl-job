@@ -6,6 +6,8 @@ import java.util.List;
 
 /**
  * Created by xuxueli on 16/9/30.
+ * 执行器分组，按照appName进行分组。
+ * 相同appName的执行器会分到同一个任务组
  */
 public class XxlJobGroup {
 

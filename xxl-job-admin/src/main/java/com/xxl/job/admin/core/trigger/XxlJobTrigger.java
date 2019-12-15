@@ -45,13 +45,17 @@ public class XxlJobTrigger {
             logger.warn(">>>>>>>>>>>> trigger fail, jobId invalid，jobId={}", jobId);
             return;
         }
+        //设置执行参数
         if (executorParam != null) {
             jobInfo.setExecutorParam(executorParam);
         }
+        //设置失败重试次数
         int finalFailRetryCount = failRetryCount>=0?failRetryCount:jobInfo.getExecutorFailRetryCount();
+        //获取任务分组（即执行器分组），添加任务时会将任务分配到执行器中，因此执行器就是分组
         XxlJobGroup group = XxlJobAdminConfig.getAdminConfig().getXxlJobGroupDao().load(jobInfo.getJobGroup());
 
         // sharding param
+        //分片参数
         int[] shardingParam = null;
         if (executorShardingParam!=null){
             String[] shardingArr = executorShardingParam.split("/");
